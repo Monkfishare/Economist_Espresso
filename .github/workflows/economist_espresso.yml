@@ -73,6 +73,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add Economist_Espresso/*
+          git add Economist_Espresso/* Economist_Espresso.pdf
           git commit -m "Add Economist Espresso News"
           git push
