@@ -60,7 +60,7 @@ jobs:
           folder_date=$(date -d "$date_modified" +"%Y-%m-%d")
           file_date=$(date -d "$date_modified" +"%Y-%m-%dT%H-%M")
 
-          cp output_clean.pdf Economist_Espresso.pdf
+          cp output_clean.pdf The_World_in_Brief.pdf
           mkdir -p Economist_Espresso/"$folder_date"
           # mv output_clean.pdf Economist_Espresso/"$folder_date"/Espresso_"$file_date".epub
           mv output_clean.pdf Economist_Espresso/"$folder_date"/Espresso_"$file_date".pdf
@@ -73,6 +73,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add Economist_Espresso/* Economist_Espresso.pdf
+          git add Economist_Espresso/* The_World_in_Brief.pdf
           git commit -m "Add Economist Espresso News"
           git push
