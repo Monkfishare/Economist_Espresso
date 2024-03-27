@@ -57,10 +57,6 @@ jobs:
           # mv output_clean.pdf Economist_Espresso/"$folder_date"/Espresso_"$file_date".epub
           mv output_clean.pdf Economist_Espresso/"$folder_date"/Espresso_"$file_date".pdf
 
-      - name: Clean Up News (keep the latest 15 days)
-        run: |
-          python deletefolder.py
-
       - name: Commit and Push changes
         run: |
           git config --local user.email "action@github.com"
