@@ -59,7 +59,7 @@ jobs:
 
       - name: Clean Up News (keep the latest 15 days)
         run: |
-          ls -1dt Economist_Espresso/* | tail -n +16 | xargs rm -rf
+          python deletefolder.py
 
       - name: Commit and Push changes
         run: |
