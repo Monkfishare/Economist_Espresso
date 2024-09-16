@@ -1,0 +1,31 @@
+name: Update Repo
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  update-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download zip file
+        run: |
+          # curl -L -o espresso-main.zip https://gitlab.com/Monkfishare/espresso/-/archive/main/espresso-main.zip
+          curl -L -o espresso-main.zip https://codeload.github.com/sywidyc/espresso/zip/refs/heads/main?token=BHXGADFREGCYK5W6FHS3OA3G5BIJQ
+          unzip espresso-main.zip -d espresso
+          rm -rf WB
+          mv espresso/espresso-main/* .
+
+      - name: Commit and Push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add WB/*
+          git commit -m "Initial commit"
+          git push
