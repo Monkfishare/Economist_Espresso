@@ -17,7 +17,7 @@ jobs:
       - name: Download zip file
         run: |
           # curl -L -o espresso-main.zip https://gitlab.com/Monkfishare/espresso/-/archive/main/espresso-main.zip
-          curl -L -o espresso-main.zip https://codeload.github.com/lacsof/espresso/zip/refs/heads/main?token=BHXGADFA4MFN3FX6FHE2EULHKG3BO
+          curl -L -o espresso-main.zip https://codeload.github.com/valzag/espresso/zip/refs/heads/main?token=BHXGADEXH5R3DXPNRD2WK7LHK3UYK
           unzip espresso-main.zip -d espresso
           rm -rf WB
           mv espresso/espresso-main/* .
