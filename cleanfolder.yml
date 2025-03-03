@@ -1,0 +1,27 @@
+name: Clean Up folders
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 14 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:      
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Clean Up News (keep the latest 15 days)
+        run: |
+          python deletefolder.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "The latest 15 days news"
+          git push

@@ -1,0 +1,66 @@
+name: The World in Brief
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '30 */3 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:      
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get install -y xdg-utils wget xz-utils python3
+          sudo apt-get install -y libxcb-cursor0 libxcb-xinerama0 libegl1 libopengl0
+
+      - name: Install Calibre
+        run: |
+          sudo -v && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin
+
+      - name: Fetch PDF
+        run: |
+          wget https://raw.githubusercontent.com/kovidgoyal/calibre/master/recipes/economist_espresso.recipe -O WB.recipe
+          ebook-convert WB.recipe output.epub
+          ebook-convert output.epub output.pdf \
+              --pdf-page-margin-top 30 \
+              --pdf-page-margin-bottom 40 \
+              --base-font-size 13 \
+              --extra-css "styles.css"
+          sudo apt-get install -y pdftk
+          pdftk output.pdf cat 4-end output output_clean.pdf
+
+      - name: Create folder
+        run: |
+          python updatedtime.py
+
+          date_modified=$(cat DateModified.txt)
+          if [ -z "$date_modified" ]; then
+            date_published=$(cat DatePublished.txt)
+            if [ -n "$date_published" ]; then
+              date_modified=$date_published
+            else
+              date_modified=$(date -u +"%Y-%m-%dT%H-%M-%S")
+              echo "Both DateModified.txt and DatePublished.txt are empty. Using the current time: $date_modified"
+            fi
+          fi
+          folder_date=$(date -d "$date_modified" +"%Y-%m-%d")
+          file_date=$(date -d "$date_modified" +"%Y-%m-%dT%H-%M")
+
+          cp output_clean.pdf The_World_in_Brief.pdf
+          mkdir -p WB/"$folder_date"
+          # mv output_clean.pdf WB/"$folder_date"/Espresso_"$file_date".epub
+          mv output_clean.pdf WB/"$folder_date"/Espresso_"$file_date".pdf
+
+      - name: Commit and Push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add WB/* The_World_in_Brief.pdf
+          git commit -m "Initial commit"
+          git push
